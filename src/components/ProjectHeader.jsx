@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import {
   Users,
   MoreHorizontal,
@@ -16,6 +17,8 @@ import {
 } from 'lucide-react';
 
 export default function ProjectHeader({ teamName = "My Software Team" }) {
+  const [activeTab, setActiveTab] = useState('Board');
+
   return (
     <div className="bg-[#1d2125] text-[#9fadbc] px-8 pt-4 flex flex-col w-full border-b border-[#22272b]">
       {/* Breadcrumbs */}
@@ -62,13 +65,13 @@ export default function ProjectHeader({ teamName = "My Software Team" }) {
 
       {/* Navigation Tabs */}
       <div className="flex items-center space-x-1.5 mt-2">
-        <TabItem icon={Globe} label="Summary" />
-        <TabItem icon={List} label="List" active />
-        <TabItem icon={Kanban} label="Board" />
-        <TabItem icon={Code} label="Code" />
-        <TabItem icon={FileText} label="Forms" />
-        <TabItem icon={AlignLeft} label="Timeline" />
-        <TabItem icon={File} label="Pages" />
+        <TabItem icon={Globe} label="Summary" onClick={() => setActiveTab('Summary')} active={activeTab === 'Summary'} />
+        <TabItem icon={List} label="List" onClick={() => setActiveTab('List')} active={activeTab === 'List'} />
+        <TabItem icon={Kanban} label="Board" onClick={() => setActiveTab('Board')} active={activeTab === 'Board'} />
+        <TabItem icon={Code} label="Code" onClick={() => setActiveTab('Code')} active={activeTab === 'Code'} />
+        <TabItem icon={FileText} label="Forms" onClick={() => setActiveTab('Forms')} active={activeTab === 'Forms'} />
+        <TabItem icon={AlignLeft} label="Timeline" onClick={() => setActiveTab('Timeline')} active={activeTab === 'Timeline'} />
+        <TabItem icon={File} label="Pages" onClick={() => setActiveTab('Pages')} active={activeTab === 'Pages'} />
         <button className="p-1.5 hover:bg-[#282e33] rounded flex items-center justify-center transition-colors ml-2 text-[#9fadbc]">
           <Plus className="w-4 h-4" />
         </button>
@@ -77,9 +80,10 @@ export default function ProjectHeader({ teamName = "My Software Team" }) {
   );
 }
 
-function TabItem({ icon: Icon, label, active }) {
+function TabItem({ icon: Icon, label, active, onClick }) {
   return (
     <button
+      onClick={onClick}
       className={`flex items-center space-x-1.5 px-3 py-2 text-[14px] font-medium border-b-2 transition-colors relative top-[1px]
         ${active
           ? 'border-[#579dff] text-[#579dff]'

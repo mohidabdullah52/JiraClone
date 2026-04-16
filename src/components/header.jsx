@@ -9,18 +9,25 @@ import {
     Plus
 } from 'lucide-react';
 
-export default function Header() {
+export default function Header({ isSidebarOpen, setIsSidebarOpen }) {
     return (
         <header className="flex items-center justify-between px-4 py-2 bg-[#1d2125] border-b border-[#22272b] text-white h-14 w-full text-sm">
             {/* Left side */}
             <div className="flex items-center space-x-3 w-full">
-                <button className="p-1 hover:bg-[#282e33] rounded group border border-[#8c9bab]/30 flex items-center justify-center transition-colors">
-                    <PanelLeft className="w-5 h-5 text-[#9fadbc]" />
-                </button>
+                {!isSidebarOpen && (
+                    <button
+                        onClick={() => setIsSidebarOpen(true)}
+                        className="p-1 hover:bg-[#282e33] rounded group border border-[#8c9bab]/30 flex items-center justify-center transition-colors">
+                        <PanelLeft className="w-5 h-5 text-[#9fadbc]" />
+                    </button>
+                )}
 
-                <button className="p-1 hover:bg-[#282e33] rounded text-[#9fadbc] transition-colors">
-                    <Grid className="w-5 h-5" />
-                </button>
+                {!isSidebarOpen && (
+                    <button className="p-1 hover:bg-[#282e33] rounded text-[#9fadbc] transition-colors">
+                        <Grid className="w-5 h-5" />
+                    </button>
+                )
+                }
 
                 <div className="flex items-center space-x-1 font-bold text-xl text-white ml-2 mr-2 cursor-pointer">
                     <div className="w-6 h-6 bg-[#2684ff] rounded-sm flex items-center justify-center mr-1">
