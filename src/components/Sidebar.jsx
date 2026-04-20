@@ -26,23 +26,10 @@ const IconMapper = {
 
 const defaultWorkspaces = [
   {
-    section: 'Starred',
-    items: [
-      { name: '(Example) Mobile App...', iconName: 'rocket', id: 1 }
-    ]
-  },
-  {
     section: 'Recent',
     items: [
       { name: 'My Software Team', active: true, id: 2 },
       { name: 'More spaces', iconName: 'menu', hasChevron: true, id: 3 }
-    ]
-  },
-  {
-    section: 'Recommended',
-    items: [
-      { name: 'Collect requests', iconName: 'folder', badge: 'TRY', id: 4 },
-      { name: 'Import work', iconName: 'cloud', id: 5 }
     ]
   }
 ];
@@ -70,7 +57,6 @@ export default function Sidebar({ workspaces = defaultWorkspaces, setIsSidebarOp
         </button>
       </div>
 
-      {/* Primary Navigation */}
       <nav className="flex flex-col px-3 space-y-0.5">
         <NavItem icon={UserCircle} label="For you" />
         <NavItem icon={Clock} label="Recent" hasChevron />
@@ -79,7 +65,6 @@ export default function Sidebar({ workspaces = defaultWorkspaces, setIsSidebarOp
         <NavItem icon={Layers} label="Plans" />
       </nav>
 
-      {/* Spaces Menu */}
       <div className="mt-6 px-3 flex flex-col">
         <div className="flex items-center justify-between px-2 py-1.5 rounded group cursor-pointer hover:bg-[#282e33] transition-colors mb-2">
           <div className="flex items-center space-x-3 text-[#9fadbc] font-semibold text-[14px]">
@@ -92,7 +77,6 @@ export default function Sidebar({ workspaces = defaultWorkspaces, setIsSidebarOp
           </div>
         </div>
 
-        {/* Dynamic Workspaces Iteration */}
         <div className="flex flex-col space-y-4">
           {workspaces.map((section, index) => (
             <div key={index} className="flex flex-col">
@@ -111,7 +95,6 @@ export default function Sidebar({ workspaces = defaultWorkspaces, setIsSidebarOp
         </div>
       </div>
 
-      {/* Left intentionally blank below workspaces per requirement */}
     </div>
   );
 }
