@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../api/NoAuthAxios';
+import AuthAxios from '../api/AuthAxios';
 
 export default function Home() {
   const [email, setEmail] = useState('');
@@ -18,6 +19,13 @@ export default function Home() {
           localStorage.setItem('access', response.data.access_token);
           localStorage.setItem('refresh', response.data.refresh_token);
           localStorage.setItem('token_type', response.data.token_type);
+          
+          // Use the authenticated client to fetch user profile
+          return AuthAxios.get('/auth/me');
+        })
+        .then((userResponse) => {
+          // Save the user data object as a string in local storage
+          localStorage.setItem('user', JSON.stringify(userResponse.data));
           navigate('/dashboard');
         })
         .catch((error) => {
