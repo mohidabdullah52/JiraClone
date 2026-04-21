@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../store/userSlice';
 import axiosInstance from '../api/NoAuthAxios';
 import AuthAxios from '../api/AuthAxios';
 
@@ -7,6 +9,7 @@ export default function Home() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -26,6 +29,10 @@ export default function Home() {
         .then((userResponse) => {
           // Save the user data object as a string in local storage
           localStorage.setItem('user', JSON.stringify(userResponse.data));
+          
+          // Broadcast to the global Redux Store
+          dispatch(setUser(userResponse.data));
+
           navigate('/dashboard');
         })
         .catch((error) => {
