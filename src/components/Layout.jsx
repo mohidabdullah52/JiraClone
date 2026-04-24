@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import Sidebar from './Sidebar';
-import Header from './header';
+import Header from './Header';
 
 export default function Layout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);

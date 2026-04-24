@@ -118,7 +118,7 @@ export default function TicketModal({ ticket, onClose }) {
                 </div>
                 <div className="flex items-center space-x-2">
                   <Calendar className="w-3.5 h-3.5" />
-                  <span>Created: {formatDate(ticket.created_at) || 'Unknown'}</span>
+                  <span>Created: {formatDate(ticket.createdAt) || 'Unknown'}</span>
                 </div>
               </div>
             </div>

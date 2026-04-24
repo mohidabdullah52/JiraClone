@@ -28,7 +28,7 @@ export default function Dashboard() {
   const [selectedTicket, setSelectedTicket] = useState(null);
 
   useEffect(() => {
-    const cachedTickets = localStorage.getItem('temporary_ticket_state');
+    const cachedTickets = localStorage.getItem('temporaryTicketState');
 
     if (cachedTickets) {
       setTickets(JSON.parse(cachedTickets));
@@ -69,7 +69,7 @@ export default function Dashboard() {
     setTickets(updatedTickets);
 
     // Save to local storage so they are kept on restart!
-    localStorage.setItem('temporary_ticket_state', JSON.stringify(updatedTickets));
+    localStorage.setItem('temporaryTicketState', JSON.stringify(updatedTickets));
   };
 
   return (

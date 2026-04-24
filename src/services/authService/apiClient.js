@@ -16,7 +16,7 @@ export const AuthAxios = axios.create({
 
 AuthAxios.interceptors.request.use(
     (config) => {
-        const token = localStorage.getItem('access');
+        const token = localStorage.getItem('accessToken');
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         }
@@ -32,7 +32,7 @@ AuthAxios.interceptors.response.use(
 
         if (error.response && error.response.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true;
-            const refreshToken = localStorage.getItem('refresh');
+            const refreshToken = localStorage.getItem('refreshToken');
 
             if (refreshToken) {
                 try {
@@ -42,22 +42,22 @@ AuthAxios.interceptors.response.use(
                     });
 
                     const newAccessToken = response.data.access_token || response.data.access;
-                    localStorage.setItem('access', newAccessToken);
+                    localStorage.setItem('accessToken', newAccessToken);
 
                     if (response.data.refresh_token || response.data.refresh) {
-                        localStorage.setItem('refresh', response.data.refresh_token || response.data.refresh);
+                        localStorage.setItem('refreshToken', response.data.refresh_token || response.data.refresh);
                     }
                     
                     originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
                     return AuthAxios(originalRequest);
 
                 } catch (refreshError) {
-                    localStorage.removeItem('access');
-                    localStorage.removeItem('refresh');
-                    localStorage.removeItem('token_type');
+                    localStorage.removeItem('accessToken');
+                    localStorage.removeItem('refreshToken');
+                    localStorage.removeItem('tokenType');
                 }
             } else {
-                localStorage.removeItem('access');
+                localStorage.removeItem('accessToken');
             }
         }
         return Promise.reject(error);
