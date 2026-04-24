@@ -4,8 +4,7 @@ import { useDispatch } from 'react-redux';
 import { setUser } from '../store/userSlice';
 import toast from 'react-hot-toast';
 import CustomInput from '../components/CustomInput';
-import axiosInstance from '../api/NoAuthAxios';
-import AuthAxios from '../api/AuthAxios';
+import { AuthAPI } from '../services/authService/endpoints';
 
 export default function Home() {
   const [email, setEmail] = useState('');
@@ -16,7 +15,7 @@ export default function Home() {
   const handleLogin = (e) => {
     e.preventDefault();
     if (email.trim() !== '' && password.trim() !== '') {
-      axiosInstance.post('/auth/login', {
+      AuthAPI.login({
         email: email.trim(),
         password: password.trim()
       })
@@ -26,7 +25,7 @@ export default function Home() {
           localStorage.setItem('token_type', response.data.token_type);
 
           // Use the authenticated client to fetch user profile
-          return AuthAxios.get('/auth/me');
+          return AuthAPI.me();
         })
         .then((userResponse) => {
           // Save the user data object as a string in local storage

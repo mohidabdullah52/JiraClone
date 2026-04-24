@@ -4,7 +4,7 @@ import { DragDropContext } from '@hello-pangea/dnd';
 import ProjectHeader from '../components/ProjectHeader'
 import TicketCategory from '../components/TicketCategory'
 import TicketModal from '../components/TicketModal'
-import AuthAxios from '../api/AuthAxios'
+import { TicketAPI } from '../services/authService/endpoints'
 import { useRef } from "react";
 
 function Counter() {
@@ -33,7 +33,7 @@ export default function Dashboard() {
     if (cachedTickets) {
       setTickets(JSON.parse(cachedTickets));
     } else {
-      AuthAxios.get('/tickets')
+      TicketAPI.listTickets()
         .then((response) => {
           setTickets(response.data);
         })

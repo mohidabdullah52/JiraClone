@@ -1,14 +1,20 @@
 import axios from 'axios';
-import NoAuthAxios from './NoAuthAxios';
 
-const axiosInstance = axios.create({
+export const NoAuthAxios = axios.create({
     baseURL: 'http://127.0.0.1:8000/',
     headers: {
         'Content-Type': 'application/json',
     },
 });
 
-axiosInstance.interceptors.request.use(
+export const AuthAxios = axios.create({
+    baseURL: 'http://127.0.0.1:8000/',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+});
+
+AuthAxios.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem('access');
         if (token) {
@@ -19,32 +25,31 @@ axiosInstance.interceptors.request.use(
     (error) => Promise.reject(error)
 );
 
-axiosInstance.interceptors.response.use(
+AuthAxios.interceptors.response.use(
     (response) => response,
     async (error) => {
         const originalRequest = error.config;
 
         if (error.response && error.response.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true;
-
             const refreshToken = localStorage.getItem('refresh');
 
             if (refreshToken) {
                 try {
-                    const response = await NoAuthAxios.post('/refresh', {
+                    // Adjusted endpoint to match OpenAPI spec: /auth/refresh
+                    const response = await NoAuthAxios.post('/auth/refresh', {
                         refresh: refreshToken
                     });
 
                     const newAccessToken = response.data.access_token || response.data.access;
-
                     localStorage.setItem('access', newAccessToken);
 
                     if (response.data.refresh_token || response.data.refresh) {
                         localStorage.setItem('refresh', response.data.refresh_token || response.data.refresh);
                     }
+                    
                     originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-
-                    return axiosInstance(originalRequest);
+                    return AuthAxios(originalRequest);
 
                 } catch (refreshError) {
                     localStorage.removeItem('access');
@@ -55,9 +60,6 @@ axiosInstance.interceptors.response.use(
                 localStorage.removeItem('access');
             }
         }
-
         return Promise.reject(error);
     }
 );
-
-export default axiosInstance;
