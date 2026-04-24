@@ -25,13 +25,41 @@ AuthAxios.interceptors.request.use(
     (error) => Promise.reject(error)
 );
 
+let isRefreshing = false;
+let failedQueue = [];
+
+const processQueue = (error, token = null) => {
+    failedQueue.forEach(prom => {
+        if (error) {
+            prom.reject(error);
+        } else {
+            prom.resolve(token);
+        }
+    });
+    failedQueue = [];
+};
+
 AuthAxios.interceptors.response.use(
     (response) => response,
     async (error) => {
         const originalRequest = error.config;
 
         if (error.response && error.response.status === 401 && !originalRequest._retry) {
+            
+            if (isRefreshing) {
+                return new Promise(function(resolve, reject) {
+                    failedQueue.push({ resolve, reject });
+                }).then(token => {
+                    originalRequest.headers.Authorization = `Bearer ${token}`;
+                    return AuthAxios(originalRequest);
+                }).catch(err => {
+                    return Promise.reject(err);
+                });
+            }
+
             originalRequest._retry = true;
+            isRefreshing = true;
+
             const refreshToken = localStorage.getItem('refreshToken');
 
             if (refreshToken) {
@@ -48,15 +76,22 @@ AuthAxios.interceptors.response.use(
                         localStorage.setItem('refreshToken', response.data.refresh_token || response.data.refresh);
                     }
                     
+                    processQueue(null, newAccessToken);
+                    
                     originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
                     return AuthAxios(originalRequest);
 
                 } catch (refreshError) {
+                    processQueue(refreshError, null);
                     localStorage.removeItem('accessToken');
                     localStorage.removeItem('refreshToken');
                     localStorage.removeItem('tokenType');
+                    return Promise.reject(refreshError);
+                } finally {
+                    isRefreshing = false;
                 }
             } else {
+                isRefreshing = false;
                 localStorage.removeItem('accessToken');
             }
         }
