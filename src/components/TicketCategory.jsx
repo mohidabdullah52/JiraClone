@@ -3,7 +3,7 @@ import { Plus } from 'lucide-react';
 import { Droppable } from '@hello-pangea/dnd';
 import TicketCard from './TicketCard';
 
-export default function TicketCategory({ categoryName, ticketInfo = [] }) {
+export default function TicketCategory({ categoryName, ticketInfo = [], onTicketClick }) {
   const isEmpty = ticketInfo.length === 0;
 
   return (
@@ -31,7 +31,12 @@ export default function TicketCategory({ categoryName, ticketInfo = [] }) {
             ref={provided.innerRef}
           >
             {ticketInfo.map((ticket, idx) => (
-              <TicketCard key={ticket.id || idx} index={idx} {...ticket} />
+              <TicketCard 
+                key={ticket.id || idx} 
+                index={idx} 
+                onClick={() => onTicketClick(ticket)}
+                {...ticket} 
+              />
             ))}
             {provided.placeholder}
           </div>

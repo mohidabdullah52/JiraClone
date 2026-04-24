@@ -10,7 +10,9 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-export default function Header({ isSidebarOpen, setIsSidebarOpen }) {
+export default function Header({ isSidebarOpen, setIsSidebarOpen, userEmail }) {
+    const userInitial = userEmail ? userEmail.charAt(0).toUpperCase() : '?';
+
     return (
         <header className="flex items-center justify-between px-4 py-2 bg-[#1d2125] border-b border-[#22272b] text-white h-14 w-full text-sm">
             {/* Left side */}
@@ -74,9 +76,19 @@ export default function Header({ isSidebarOpen, setIsSidebarOpen }) {
                     </button>
                 </div>
 
-                <button className="w-7 h-7 rounded-full bg-[#00a3bf] text-[#1d2125] flex items-center justify-center text-xs font-bold ml-1 hover:opacity-90 transition-opacity">
-                    M
-                </button>
+                <div className="flex items-center space-x-2 pl-2">
+                    {userEmail && (
+                        <span className="text-[#9fadbc] text-xs font-medium truncate max-w-[120px] hidden md:block">
+                            {userEmail}
+                        </span>
+                    )}
+                    <button
+                        className="w-7 h-7 rounded-full bg-[#00a3bf] text-[#1d2125] flex items-center justify-center text-xs font-bold hover:opacity-90 transition-opacity shrink-0"
+                        title={userEmail || "Profile"}
+                    >
+                        {userInitial}
+                    </button>
+                </div>
             </div>
         </header>
     );

@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../store/userSlice';
+import toast from 'react-hot-toast';
+import CustomInput from '../components/CustomInput';
 import axiosInstance from '../api/NoAuthAxios';
 import AuthAxios from '../api/AuthAxios';
 
@@ -22,14 +24,14 @@ export default function Home() {
           localStorage.setItem('access', response.data.access_token);
           localStorage.setItem('refresh', response.data.refresh_token);
           localStorage.setItem('token_type', response.data.token_type);
-          
+
           // Use the authenticated client to fetch user profile
           return AuthAxios.get('/auth/me');
         })
         .then((userResponse) => {
           // Save the user data object as a string in local storage
           localStorage.setItem('user', JSON.stringify(userResponse.data));
-          
+
           // Broadcast to the global Redux Store
           dispatch(setUser(userResponse.data));
 
@@ -37,7 +39,7 @@ export default function Home() {
         })
         .catch((error) => {
           console.error(error);
-          alert(`Login Failed: ${error.message}`);
+          toast.error(`Login Failed: ${error.message}`);
         });
     }
   };
@@ -60,27 +62,21 @@ export default function Home() {
         </h1>
 
         <form onSubmit={handleLogin} className="flex flex-col space-y-5">
-          <div className="flex flex-col">
-            <label className="text-[12px] font-bold text-[#9fadbc] mb-1.5 ml-0.5">Email address</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
-              className="bg-[#1d2125] border border-[#738496] rounded px-3 py-2 text-[#c7d1db] placeholder-[#738496] focus:outline-none focus:border-[#4c9aff] focus:ring-1 focus:ring-[#4c9aff] transition-all text-[14px]"
-            />
-          </div>
+          <CustomInput
+            label="Email address"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Enter your email"
+          />
 
-          <div className="flex flex-col">
-            <label className="text-[12px] font-bold text-[#9fadbc] mb-1.5 ml-0.5">Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter password"
-              className="bg-[#1d2125] border border-[#738496] rounded px-3 py-2 text-[#c7d1db] placeholder-[#738496] focus:outline-none focus:border-[#4c9aff] focus:ring-1 focus:ring-[#4c9aff] transition-all text-[14px]"
-            />
-          </div>
+          <CustomInput
+            label="Password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Enter password"
+          />
 
           <button
             type="submit"

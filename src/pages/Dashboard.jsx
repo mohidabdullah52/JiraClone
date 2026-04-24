@@ -3,26 +3,44 @@ import { useNavigate } from 'react-router-dom';
 import { DragDropContext } from '@hello-pangea/dnd';
 import ProjectHeader from '../components/ProjectHeader'
 import TicketCategory from '../components/TicketCategory'
+import TicketModal from '../components/TicketModal'
 import AuthAxios from '../api/AuthAxios'
+import { useRef } from "react";
+
+function Counter() {
+  const countRef = useRef(0);
+
+  const increment = () => {
+    countRef.current += 1;
+    console.log(countRef.current);
+  };
+
+  return <div className='flex items-center justify-center'>
+    <button className='font-bold text-white bg-blue-500 px-4 py-2 rounded-lg' onClick={increment}>Increment</button>
+    <br />
+    <p className='font-bold text-white'>{countRef.current}</p>
+  </div>
+}
 
 export default function Dashboard() {
   const navigate = useNavigate();
   const [tickets, setTickets] = useState([]);
+  const [selectedTicket, setSelectedTicket] = useState(null);
 
   useEffect(() => {
-    const token = localStorage.getItem('access');
-    if (!token) {
-      navigate('/');
-      return;
-    }
+    const cachedTickets = localStorage.getItem('temporary_ticket_state');
 
-    AuthAxios.get('/tickets')
+    if (cachedTickets) {
+      setTickets(JSON.parse(cachedTickets));
+    } else {
+      AuthAxios.get('/tickets')
         .then((response) => {
-            setTickets(response.data);
+          setTickets(response.data);
         })
         .catch((error) => {
-            console.error("Failed to fetch dashboard tickets: ", error);
+          console.error("Failed to fetch dashboard tickets: ", error);
         });
+    }
 
   }, [navigate]);
 
@@ -34,21 +52,24 @@ export default function Dashboard() {
 
     // Convert visual column name to the database enum
     const statusMap = {
-        "TO DO": "TODO",
-        "IN REVIEW": "INREVIEW"
+      "TO DO": "TODO",
+      "IN REVIEW": "INREVIEW"
     };
     const targetStatus = statusMap[destination.droppableId];
 
     // Optimistically update the UI instantly without waiting or refreshing
     const updatedTickets = tickets.map(ticket => {
-        if (String(ticket.id) === draggableId) {
-            // Note: If you have a backend endpoint to update this, put the AuthAxios.patch call here!
-            return { ...ticket, status: targetStatus };
-        }
-        return ticket;
+      if (String(ticket.id) === draggableId) {
+        return { ...ticket, status: targetStatus };
+      }
+      return ticket;
     });
 
+    // Update the visual React state
     setTickets(updatedTickets);
+
+    // Save to local storage so they are kept on restart!
+    localStorage.setItem('temporary_ticket_state', JSON.stringify(updatedTickets));
   };
 
   return (
@@ -60,14 +81,25 @@ export default function Dashboard() {
           <TicketCategory
             categoryName="TO DO"
             ticketInfo={tickets.filter(ticket => ticket.status === 'TODO')}
+            onTicketClick={setSelectedTicket}
           />
 
           <TicketCategory
             categoryName="IN REVIEW"
             ticketInfo={tickets.filter(ticket => ticket.status === 'INREVIEW')}
+            onTicketClick={setSelectedTicket}
           />
+          <Counter />
         </div>
       </DragDropContext>
+
+      {/* Pop-up Ticket Modal */}
+      {selectedTicket && (
+        <TicketModal
+          ticket={selectedTicket}
+          onClose={() => setSelectedTicket(null)}
+        />
+      )}
     </>
   )
 }

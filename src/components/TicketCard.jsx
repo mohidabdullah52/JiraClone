@@ -14,7 +14,8 @@ export default function TicketCard({
     assignee, 
     dueDate, 
     created_at, 
-    updated_at 
+    updated_at,
+    onClick
 }) {
     // Safely format an ISO date string to Jira's "19 Apr 2026" standard
     const formatDate = (dateString) => {
@@ -37,6 +38,7 @@ export default function TicketCard({
                     ref={provided.innerRef}
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
+                    onClick={onClick}
                     className={`bg-[#22272b] p-3 rounded-[8px] border border-[#4c9aff] flex flex-col cursor-pointer transition-colors ${snapshot.isDragging ? 'bg-[#282e33] shadow-[0_5px_15px_rgba(0,0,0,0.7)] rotate-2 z-50' : 'shadow-[0_1px_2px_rgba(0,0,0,0.3)] hover:bg-[#282e33]'}`}
                 >
                     {/* Title Row */}
