@@ -83,12 +83,13 @@ export default function Header({ isSidebarOpen, setIsSidebarOpen, userEmail }) {
                             {userEmail}
                         </span>
                     )}
-                    <button
+                    <Button
+                        variant="icon"
                         className="w-7 h-7 rounded-full bg-[#00a3bf] text-[#1d2125] flex items-center justify-center text-xs font-bold hover:opacity-90 transition-opacity shrink-0"
                         title={userEmail || "Profile"}
                     >
                         {userInitial}
-                    </button>
+                    </Button>
                 </div>
             </div>
         </header>

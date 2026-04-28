@@ -71,17 +71,17 @@ export default function ProjectHeader({ teamName = "My Software Team" }) {
 
 function TabItem({ icon: Icon, label, active, onClick }) {
   return (
-    <button
+    <Button
+      variant="tab"
       onClick={onClick}
-      className={`flex items-center space-x-1.5 px-3 py-2 text-[14px] font-medium border-b-2 transition-colors relative top-[1px]
-        ${active
+      className={
+        active
           ? 'border-[#579dff] text-[#579dff]'
           : 'border-transparent text-[#9fadbc] hover:bg-[#282e33] hover:text-[#c7d1db] rounded-t'
-        }
-      `}
+      }
     >
       <Icon className="w-[18px] h-[18px]" />
       <span>{label}</span>
-    </button>
+    </Button>
   );
 }

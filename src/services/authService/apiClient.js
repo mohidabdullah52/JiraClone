@@ -70,16 +70,16 @@ AuthAxios.interceptors.response.use(
                     });
 
                     const { 
-                        access_token: apiAccessToken, 
-                        access: apiAccess, 
-                        refresh_token: apiRefreshToken, 
-                        refresh: apiRefresh 
+                        access_token: rawAccessToken, 
+                        access: rawAccess, 
+                        refresh_token: rawRefreshToken, 
+                        refresh: rawRefresh 
                     } = response.data;
 
-                    const newAccessToken = apiAccessToken || apiAccess;
+                    const newAccessToken = rawAccessToken || rawAccess;
                     localStorage.setItem('accessToken', newAccessToken);
 
-                    const newRefreshToken = apiRefreshToken || apiRefresh;
+                    const newRefreshToken = rawRefreshToken || rawRefresh;
                     if (newRefreshToken) {
                         localStorage.setItem('refreshToken', newRefreshToken);
                     }

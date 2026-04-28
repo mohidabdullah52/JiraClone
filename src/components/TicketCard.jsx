@@ -14,8 +14,8 @@ export default function TicketCard({
     reporter, 
     assignee, 
     dueDate, 
-    created_at, 
-    updated_at,
+    createdAt, 
+    updatedAt,
     onClick
 }) {
     // Safely format an ISO date string to Jira's "19 Apr 2026" standard

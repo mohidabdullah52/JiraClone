@@ -18,7 +18,8 @@ const Button = ({
     ghost: "hover:bg-[#282e33] text-[#9fadbc] hover:text-[#c7d1db] p-1.5 transition-colors",
     danger: "bg-[#ef4444] hover:bg-[#f87171] text-white px-3 py-1.5",
     link: "text-[#579dff] hover:underline p-0 h-auto font-normal",
-    icon: "p-1 hover:bg-[#282e33] rounded text-[#9fadbc] transition-colors"
+    icon: "p-1 hover:bg-[#282e33] rounded text-[#9fadbc] transition-colors",
+    tab: "flex items-center space-x-1.5 px-3 py-2 text-[14px] font-medium border-b-2 transition-colors relative top-[1px] rounded-none bg-transparent"
   };
 
   const variantStyles = variants[variant] || variants.primary;
