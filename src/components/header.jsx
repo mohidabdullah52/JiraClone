@@ -5,10 +5,10 @@ import {
     HelpCircle,
     Settings,
     PanelLeft,
-    Gem,
     Plus
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import Button from './common/Button';
+import Input from './common/Input';
 
 export default function Header({ isSidebarOpen, setIsSidebarOpen, userEmail }) {
     const userInitial = userEmail ? userEmail.charAt(0).toUpperCase() : '?';
@@ -18,17 +18,19 @@ export default function Header({ isSidebarOpen, setIsSidebarOpen, userEmail }) {
             {/* Left side */}
             <div className="flex items-center space-x-3 w-full">
                 {!isSidebarOpen && (
-                    <button
+                    <Button
+                        variant="icon"
                         onClick={() => setIsSidebarOpen(true)}
-                        className="p-1 hover:bg-[#282e33] rounded group border border-[#8c9bab]/30 flex items-center justify-center transition-colors">
-                        <PanelLeft className="w-5 h-5 text-[#9fadbc]" />
-                    </button>
+                        className="border border-[#8c9bab]/30"
+                        icon={PanelLeft}
+                    />
                 )}
 
                 {!isSidebarOpen && (
-                    <button className="p-1 hover:bg-[#282e33] rounded text-[#9fadbc] transition-colors">
-                        <Grid className="w-5 h-5" />
-                    </button>
+                    <Button
+                        variant="icon"
+                        icon={Grid}
+                    />
                 )
                 }
 
@@ -41,39 +43,38 @@ export default function Header({ isSidebarOpen, setIsSidebarOpen, userEmail }) {
                     <span className="tracking-tight text-[1.15rem]">Jira</span>
                 </div>
 
-                <div className="relative flex items-center w-[300px]">
-                    <Search className="w-4 h-4 absolute left-3 text-[#9fadbc]" />
-                    <input
+                <div className="w-[300px]">
+                    <Input
                         type="text"
                         placeholder="Search"
-                        className="w-full pl-9 pr-4 py-1.5 bg-[#22272b] border border-[#738496] rounded hover:bg-[#282e33] focus:bg-[#22272b] focus:border-[#4c9aff] focus:ring-1 focus:ring-[#4c9aff] outline-none text-[#9fadbc] placeholder-[#9fadbc] transition-all"
+                        icon={Search}
+                        className="py-1.5 hover:bg-[#282e33] focus:bg-[#22272b]"
                     />
                 </div>
 
-                <button className="bg-[#579dff] hover:bg-[#85b8ff] text-[#1d2125] px-3 py-1.5 rounded font-medium transition-colors flex items-center ml-2">
-                    <Plus className="w-4 h-4 mr-0.5" />
-                    <span>Create</span>
-                </button>
+                <Button
+                    variant="primary"
+                    className="ml-2"
+                    icon={Plus}
+                >
+                    Create
+                </Button>
             </div>
 
             {/* Right side */}
             <div className="flex items-center space-x-4 pl-4 flex-shrink-0">
 
                 <div className="flex items-center space-x-1">
-                    <button className="p-1.5 hover:bg-[#282e33] rounded-full relative text-[#9fadbc] transition-colors">
-                        <Bell className="w-5 h-5" />
-                        <span className="absolute top-0 right-0 bg-[#579dff] text-[#1d2125] text-[10px] font-bold px-[3px] rounded flex items-center justify-center transform translate-x-0.5 -translate-y-0.5">
+                    <div className="relative">
+                        <Button variant="icon" icon={Bell} className="rounded-full p-1.5" />
+                        <span className="absolute top-0 right-0 bg-[#579dff] text-[#1d2125] text-[10px] font-bold px-[3px] rounded flex items-center justify-center transform translate-x-0.5 -translate-y-0.5 pointer-events-none">
                             3+
                         </span>
-                    </button>
+                    </div>
 
-                    <button className="p-1.5 hover:bg-[#282e33] rounded-full text-[#9fadbc] transition-colors">
-                        <HelpCircle className="w-5 h-5" />
-                    </button>
+                    <Button variant="icon" icon={HelpCircle} className="rounded-full p-1.5" />
 
-                    <button className="p-1.5 hover:bg-[#282e33] rounded-full text-[#9fadbc] transition-colors">
-                        <Settings className="w-5 h-5" />
-                    </button>
+                    <Button variant="icon" icon={Settings} className="rounded-full p-1.5" />
                 </div>
 
                 <div className="flex items-center space-x-2 pl-2">

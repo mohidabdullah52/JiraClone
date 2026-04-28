@@ -3,9 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../store/userSlice';
 import toast from 'react-hot-toast';
-import CustomInput from '../components/CustomInput';
-import axiosInstance from '../api/NoAuthAxios';
-import AuthAxios from '../api/AuthAxios';
+import Input from '../components/common/Input';
+import Button from '../components/common/Button';
+import { AuthAPI } from '../services/authService/endpoints';
+
 
 export default function Home() {
   const [email, setEmail] = useState('');
@@ -16,17 +17,17 @@ export default function Home() {
   const handleLogin = (e) => {
     e.preventDefault();
     if (email.trim() !== '' && password.trim() !== '') {
-      axiosInstance.post('/auth/login', {
+      AuthAPI.login({
         email: email.trim(),
         password: password.trim()
       })
         .then((response) => {
-          localStorage.setItem('access', response.data.access_token);
-          localStorage.setItem('refresh', response.data.refresh_token);
-          localStorage.setItem('token_type', response.data.token_type);
+          localStorage.setItem('accessToken', response.data.accessToken);
+          localStorage.setItem('refreshToken', response.data.refreshToken);
+          localStorage.setItem('tokenType', response.data.tokenType);
 
           // Use the authenticated client to fetch user profile
-          return AuthAxios.get('/auth/me');
+          return AuthAPI.me();
         })
         .then((userResponse) => {
           // Save the user data object as a string in local storage
@@ -62,7 +63,7 @@ export default function Home() {
         </h1>
 
         <form onSubmit={handleLogin} className="flex flex-col space-y-5">
-          <CustomInput
+          <Input
             label="Email address"
             type="email"
             value={email}
@@ -70,7 +71,7 @@ export default function Home() {
             placeholder="Enter your email"
           />
 
-          <CustomInput
+          <Input
             label="Password"
             type="password"
             value={password}
@@ -78,12 +79,13 @@ export default function Home() {
             placeholder="Enter password"
           />
 
-          <button
+          <Button
             type="submit"
-            className={`mt-4 bg-[#579dff] text-[#1d2125] font-bold py-2 rounded transition-all flex items-center justify-center text-[15px] ${(!email || !password) ? 'opacity-50 cursor-not-allowed' : 'hover:bg-[#85b8ff]'}`}
+            disabled={!email || !password}
+            className="mt-4"
           >
             Log in
-          </button>
+          </Button>
         </form>
       </div>
     </div>

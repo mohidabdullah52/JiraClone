@@ -2,6 +2,7 @@ import React from 'react';
 import { Plus } from 'lucide-react';
 import { Droppable } from '@hello-pangea/dnd';
 import TicketCard from './TicketCard';
+import Button from './common/Button';
 
 export default function TicketCategory({ categoryName, ticketInfo = [], onTicketClick }) {
   const isEmpty = ticketInfo.length === 0;
@@ -45,10 +46,13 @@ export default function TicketCategory({ categoryName, ticketInfo = [], onTicket
 
       {/* Create Button */}
       {!isEmpty && (
-        <button className="flex items-center space-x-2 text-[#9fadbc] hover:bg-[#282e33] p-1.5 rounded transition-colors text-[14px] font-medium w-full mt-1">
-          <Plus className="w-5 h-5" />
-          <span>Create</span>
-        </button>
+        <Button 
+            variant="ghost" 
+            icon={Plus} 
+            className="w-full mt-1 justify-start px-2 py-1.5 text-[14px] font-medium"
+        >
+          Create
+        </Button>
       )}
     </div>
   );

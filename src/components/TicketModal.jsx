@@ -1,5 +1,6 @@
 import React from 'react';
 import { X, Calendar, User, AlignLeft, Activity } from 'lucide-react';
+import Button from './common/Button';
 
 export default function TicketModal({ ticket, onClose }) {
   if (!ticket) return null;
@@ -33,12 +34,12 @@ export default function TicketModal({ ticket, onClose }) {
             </div>
             <h2 className="text-[#c7d1db] text-2xl font-bold leading-tight mt-2">{ticket.title}</h2>
           </div>
-          <button 
+          <Button 
+            variant="ghost"
             onClick={onClose}
-            className="text-[#9fadbc] hover:bg-[#282e33] hover:text-[#c7d1db] p-1.5 rounded transition-colors shrink-0"
-          >
-            <X className="w-6 h-6" />
-          </button>
+            icon={X}
+            className="p-1.5 hover:bg-[#282e33] hover:text-[#c7d1db] rounded transition-colors shrink-0"
+          />
         </div>
 
         {/* Content Body */}

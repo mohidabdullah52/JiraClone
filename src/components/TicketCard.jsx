@@ -1,6 +1,7 @@
 import React from 'react';
 import { Calendar, CheckSquare, MoreHorizontal, SquarePen } from 'lucide-react';
 import { Draggable } from '@hello-pangea/dnd';
+import Button from './common/Button';
 
 export default function TicketCard({ 
     id, 
@@ -49,9 +50,7 @@ export default function TicketCard({
                 </span>
                 <SquarePen className="w-4 h-4 text-[#9fadbc] shrink-0" />
               </div>
-              <button className="text-[#9fadbc] hover:bg-[#a6c5e229] p-0.5 rounded transition-colors shrink-0">
-                <MoreHorizontal className="w-[18px] h-[18px]" strokeWidth={2.5}/>
-              </button>
+              <Button variant="ghost" icon={MoreHorizontal} className="p-0.5 rounded transition-colors shrink-0" />
             </div>
 
             {/* Date Badge */}

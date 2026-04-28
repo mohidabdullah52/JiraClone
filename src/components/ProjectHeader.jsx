@@ -15,6 +15,7 @@ import {
   File,
   Plus
 } from 'lucide-react';
+import Button from './common/Button';
 
 export default function ProjectHeader({ teamName = "My Software Team" }) {
   const [activeTab, setActiveTab] = useState('Board');
@@ -22,9 +23,12 @@ export default function ProjectHeader({ teamName = "My Software Team" }) {
   return (
     <div className="bg-[#1d2125] text-[#9fadbc] px-8 pt-4 flex flex-col w-full border-b border-[#22272b]">
       {/* Breadcrumbs */}
-      <div className="text-xs mb-3 hover:underline cursor-pointer w-fit text-[#9fadbc]">
+      <Button 
+        variant="link" 
+        className="text-xs mb-3 w-fit text-[#9fadbc] hover:no-underline"
+      >
         Spaces
-      </div>
+      </Button>
 
       {/* Title area */}
       <div className="flex items-center justify-between mb-4">
@@ -38,28 +42,15 @@ export default function ProjectHeader({ teamName = "My Software Team" }) {
 
           <h1 className="text-[1.35rem] font-bold text-[#c7d1db] tracking-tight">{teamName}</h1>
 
-          <button className="p-1.5 hover:bg-[#282e33] rounded flex items-center justify-center transition-colors border border-transparent hover:border-[#8c9bab]/20 ml-2">
-            <Users className="w-4 h-4 text-[#9fadbc]" />
-          </button>
-
-          <button className="p-1 hover:bg-[#282e33] rounded flex items-center justify-center transition-colors">
-            <MoreHorizontal className="w-5 h-5 text-[#9fadbc]" />
-          </button>
+          <Button variant="ghost" icon={Users} className="ml-2 border border-transparent hover:border-[#8c9bab]/20" />
+          <Button variant="ghost" icon={MoreHorizontal} className="p-1" />
         </div>
 
         <div className="flex items-center space-x-2">
-          <button className="p-1.5 hover:bg-[#282e33] rounded border border-[#8c9bab]/20 flex items-center justify-center transition-colors group">
-            <Share2 className="w-4 h-4 text-[#9fadbc] group-hover:text-[#c7d1db]" />
-          </button>
-          <button className="p-1.5 hover:bg-[#282e33] rounded border border-[#8c9bab]/20 flex items-center justify-center transition-colors group">
-            <Zap className="w-4 h-4 text-[#9fadbc] group-hover:text-[#c7d1db]" />
-          </button>
-          <button className="p-1.5 hover:bg-[#282e33] rounded border border-[#8c9bab]/20 flex items-center justify-center transition-colors group">
-            <ExternalLink className="w-4 h-4 text-[#9fadbc] group-hover:text-[#c7d1db]" />
-          </button>
-          <button className="p-1.5 hover:bg-[#282e33] rounded border border-[#8c9bab]/20 flex items-center justify-center transition-colors group">
-            <Maximize2 className="w-4 h-4 text-[#9fadbc] group-hover:text-[#c7d1db]" />
-          </button>
+          <Button variant="ghost" icon={Share2} className="border border-[#8c9bab]/20 group" />
+          <Button variant="ghost" icon={Zap} className="border border-[#8c9bab]/20 group" />
+          <Button variant="ghost" icon={ExternalLink} className="border border-[#8c9bab]/20 group" />
+          <Button variant="ghost" icon={Maximize2} className="border border-[#8c9bab]/20 group" />
         </div>
       </div>
 
@@ -72,9 +63,7 @@ export default function ProjectHeader({ teamName = "My Software Team" }) {
         <TabItem icon={FileText} label="Forms" onClick={() => setActiveTab('Forms')} active={activeTab === 'Forms'} />
         <TabItem icon={AlignLeft} label="Timeline" onClick={() => setActiveTab('Timeline')} active={activeTab === 'Timeline'} />
         <TabItem icon={File} label="Pages" onClick={() => setActiveTab('Pages')} active={activeTab === 'Pages'} />
-        <button className="p-1.5 hover:bg-[#282e33] rounded flex items-center justify-center transition-colors ml-2 text-[#9fadbc]">
-          <Plus className="w-4 h-4" />
-        </button>
+        <Button variant="ghost" icon={Plus} className="ml-2" />
       </div>
     </div>
   );

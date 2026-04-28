@@ -16,6 +16,7 @@ import {
   CloudUpload,
   Grid
 } from 'lucide-react';
+import Button from './common/Button';
 
 const IconMapper = {
   rocket: Rocket,
@@ -40,9 +41,7 @@ export default function Sidebar({ workspaces = defaultWorkspaces, setIsSidebarOp
       {/* Top App Header */}
       <div className="flex items-center justify-between px-4 mb-4">
         <div className="flex items-center space-x-3">
-          <button className="hover:bg-[#282e33] p-1.5 rounded transition-colors text-[#9fadbc]">
-            <Grid className="w-5 h-5" />
-          </button>
+          <Button variant="ghost" icon={Grid} />
           <div className="flex items-center space-x-2">
             <div className="w-[22px] h-[22px] bg-[#2684ff] rounded-sm flex items-center justify-center">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -52,9 +51,11 @@ export default function Sidebar({ workspaces = defaultWorkspaces, setIsSidebarOp
             <span className="font-bold text-white text-[16px] tracking-tight">Jira</span>
           </div>
         </div>
-        <button className="hover:bg-[#282e33] p-1.5 rounded transition-colors text-[#9fadbc]" onClick={() => setIsSidebarOpen(false)}>
-          <PanelLeftClose className="w-[18px] h-[18px]" strokeWidth={2.5} />
-        </button>
+        <Button 
+          variant="ghost" 
+          icon={PanelLeftClose} 
+          onClick={() => setIsSidebarOpen(false)}
+        />
       </div>
 
       <nav className="flex flex-col px-3 space-y-0.5">
@@ -72,8 +73,8 @@ export default function Sidebar({ workspaces = defaultWorkspaces, setIsSidebarOp
             <span>Spaces</span>
           </div>
           <div className="flex items-center space-x-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
-            <button className="p-1 hover:bg-[#a6c5e229] rounded text-[#9fadbc]"><Plus className="w-4 h-4" /></button>
-            <button className="p-1 hover:bg-[#a6c5e229] rounded text-[#9fadbc]"><MoreHorizontal className="w-4 h-4" /></button>
+            <Button variant="ghost" icon={Plus} className="p-1 hover:bg-[#a6c5e229]" />
+            <Button variant="ghost" icon={MoreHorizontal} className="p-1 hover:bg-[#a6c5e229]" />
           </div>
         </div>
 
@@ -101,13 +102,16 @@ export default function Sidebar({ workspaces = defaultWorkspaces, setIsSidebarOp
 
 function NavItem({ icon: Icon, label, hasChevron }) {
   return (
-    <button className="flex items-center justify-between px-2 py-1.5 rounded hover:bg-[#282e33] transition-colors w-full group">
+    <Button 
+        variant="ghost" 
+        className="justify-between px-2 py-1.5 w-full group"
+    >
       <div className="flex items-center space-x-3 text-[#9fadbc] group-hover:text-[#c7d1db]">
         <Icon className="w-5 h-5" strokeWidth={2} />
         <span className="text-[14px] font-medium">{label}</span>
       </div>
       {hasChevron && <ChevronRight className="w-4 h-4 text-[#9fadbc] opacity-0 group-hover:opacity-100 transition-opacity" />}
-    </button>
+    </Button>
   );
 }
 
@@ -116,7 +120,10 @@ function WorkspaceItem({ item }) {
   const SpecificIcon = IconMapper[item.iconName];
 
   return (
-    <button className={`flex items-center justify-between px-2 py-[7px] rounded transition-colors w-full group ${isActive ? 'bg-[#1c2b41] text-[#579dff] hover:bg-[#1c2b41]' : 'hover:bg-[#282e33] text-[#9fadbc]'}`}>
+    <Button 
+        variant="ghost"
+        className={`justify-between px-2 py-[7px] w-full group ${isActive ? 'bg-[#1c2b41] text-[#579dff] hover:bg-[#1c2b41]' : ''}`}
+    >
       <div className="flex items-center space-x-3 w-full overflow-hidden">
         <div className="w-[20px] h-[20px] rounded flex items-center justify-center shrink-0">
           {SpecificIcon ? (
@@ -140,6 +147,6 @@ function WorkspaceItem({ item }) {
         )}
         {item.hasChevron && <ChevronRight className="w-4 h-4 text-[#9fadbc] opacity-0 group-hover:opacity-100 transition-opacity" />}
       </div>
-    </button>
+    </Button>
   );
 }

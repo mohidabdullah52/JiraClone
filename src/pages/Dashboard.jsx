@@ -4,8 +4,9 @@ import { DragDropContext } from '@hello-pangea/dnd';
 import ProjectHeader from '../components/ProjectHeader'
 import TicketCategory from '../components/TicketCategory'
 import TicketModal from '../components/TicketModal'
-import AuthAxios from '../api/AuthAxios'
+import { TicketAPI } from '../services/authService/endpoints'
 import { useRef } from "react";
+import Button from '../components/common/Button';
 
 function Counter() {
   const countRef = useRef(0);
@@ -16,7 +17,7 @@ function Counter() {
   };
 
   return <div className='flex items-center justify-center'>
-    <button className='font-bold text-white bg-blue-500 px-4 py-2 rounded-lg' onClick={increment}>Increment</button>
+    <Button onClick={increment}>Increment</Button>
     <br />
     <p className='font-bold text-white'>{countRef.current}</p>
   </div>
@@ -28,12 +29,12 @@ export default function Dashboard() {
   const [selectedTicket, setSelectedTicket] = useState(null);
 
   useEffect(() => {
-    const cachedTickets = localStorage.getItem('temporary_ticket_state');
+    const cachedTickets = localStorage.getItem('temporaryTicketState');
 
     if (cachedTickets) {
       setTickets(JSON.parse(cachedTickets));
     } else {
-      AuthAxios.get('/tickets')
+      TicketAPI.listTickets()
         .then((response) => {
           setTickets(response.data);
         })
@@ -69,7 +70,7 @@ export default function Dashboard() {
     setTickets(updatedTickets);
 
     // Save to local storage so they are kept on restart!
-    localStorage.setItem('temporary_ticket_state', JSON.stringify(updatedTickets));
+    localStorage.setItem('temporaryTicketState', JSON.stringify(updatedTickets));
   };
 
   return (
