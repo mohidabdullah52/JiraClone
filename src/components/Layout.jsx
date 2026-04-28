@@ -14,10 +14,10 @@ export default function Layout() {
         <Sidebar setIsSidebarOpen={setIsSidebarOpen} />
       )}
       <div className="flex flex-col flex-grow overflow-auto w-full relative">
-        <Header 
-            isSidebarOpen={isSidebarOpen} 
-            setIsSidebarOpen={setIsSidebarOpen} 
-            userEmail={user?.email} 
+        <Header
+          isSidebarOpen={isSidebarOpen}
+          setIsSidebarOpen={setIsSidebarOpen}
+          userEmail={user?.email}
         />
         {/* Child routes inject their content here via Outlet */}
         <Outlet />

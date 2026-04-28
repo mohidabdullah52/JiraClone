@@ -1,8 +1,5 @@
 import { AuthAxios, NoAuthAxios } from './apiClient';
 
-/**
- * Authentication & User Management Endpoints
- */
 export const AuthAPI = {
   register: (data) => NoAuthAxios.post('/auth/register', data),
   login: (data) => NoAuthAxios.post('/auth/login', data).then(res => ({
@@ -35,9 +32,7 @@ export const AuthAPI = {
   })),
 };
 
-/**
- * Tickets Management Endpoints
- */
+
 export const TicketAPI = {
   listTickets: () => AuthAxios.get('/tickets').then(res => ({
       ...res,
