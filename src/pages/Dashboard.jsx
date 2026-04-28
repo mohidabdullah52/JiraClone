@@ -4,7 +4,7 @@ import { DragDropContext } from '@hello-pangea/dnd';
 import ProjectHeader from '../components/ProjectHeader'
 import TicketCategory from '../components/TicketCategory'
 import TicketModal from '../components/TicketModal'
-import { TicketAPI } from '../services/authService/endpoints'
+import { TicketAPI } from '../services/ticketService/ticketService';
 import { useRef } from "react";
 import Button from '../components/common/Button';
 

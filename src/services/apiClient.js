@@ -1,14 +1,15 @@
 import axios from 'axios';
+import { AUTH_ENDPOINTS } from './apiEndpoints';
 
 export const NoAuthAxios = axios.create({
-    baseURL: 'http://127.0.0.1:8000/',
+    baseURL: import.meta.env.VITE_API_BASE_URL,
     headers: {
         'Content-Type': 'application/json',
     },
 });
 
 export const AuthAxios = axios.create({
-    baseURL: 'http://127.0.0.1:8000/',
+    baseURL: import.meta.env.VITE_API_BASE_URL,
     headers: {
         'Content-Type': 'application/json',
     },
@@ -45,9 +46,9 @@ AuthAxios.interceptors.response.use(
         const originalRequest = error.config;
 
         if (error.response && error.response.status === 401 && !originalRequest._retry) {
-            
+
             if (isRefreshing) {
-                return new Promise(function(resolve, reject) {
+                return new Promise(function (resolve, reject) {
                     failedQueue.push({ resolve, reject });
                 }).then(token => {
                     originalRequest.headers.Authorization = `Bearer ${token}`;
@@ -64,16 +65,15 @@ AuthAxios.interceptors.response.use(
 
             if (refreshToken) {
                 try {
-                    // Adjusted endpoint to match OpenAPI spec: /auth/refresh
-                    const response = await NoAuthAxios.post('/auth/refresh', {
+                    const response = await NoAuthAxios.post(AUTH_ENDPOINTS.refresh, {
                         refresh: refreshToken
                     });
 
-                    const { 
-                        access_token: rawAccessToken, 
-                        access: rawAccess, 
-                        refresh_token: rawRefreshToken, 
-                        refresh: rawRefresh 
+                    const {
+                        access_token: rawAccessToken,
+                        access: rawAccess,
+                        refresh_token: rawRefreshToken,
+                        refresh: rawRefresh
                     } = response.data;
 
                     const newAccessToken = rawAccessToken || rawAccess;
@@ -83,9 +83,9 @@ AuthAxios.interceptors.response.use(
                     if (newRefreshToken) {
                         localStorage.setItem('refreshToken', newRefreshToken);
                     }
-                    
+
                     processQueue(null, newAccessToken);
-                    
+
                     originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
                     return AuthAxios(originalRequest);
 

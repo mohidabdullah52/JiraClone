@@ -5,7 +5,7 @@ import { setUser } from '../store/userSlice';
 import toast from 'react-hot-toast';
 import Input from '../components/common/Input';
 import Button from '../components/common/Button';
-import { AuthAPI } from '../services/authService/endpoints';
+import { AuthAPI } from '../services/authService/authService';
 
 
 export default function Home() {
