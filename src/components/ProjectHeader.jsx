@@ -16,15 +16,21 @@ import {
   Plus
 } from 'lucide-react';
 import Button from './common/Button';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 export default function ProjectHeader({ teamName = "My Software Team" }) {
-  const [activeTab, setActiveTab] = useState('Board');
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleTabClick = (tab, path) => {
+    navigate(path);
+  };
 
   return (
     <div className="bg-[#1d2125] text-[#9fadbc] px-8 pt-4 flex flex-col w-full border-b border-[#22272b]">
       {/* Breadcrumbs */}
-      <Button 
-        variant="link" 
+      <Button
+        variant="link"
         className="text-xs mb-3 w-fit text-[#9fadbc] hover:no-underline"
       >
         Spaces
@@ -56,13 +62,13 @@ export default function ProjectHeader({ teamName = "My Software Team" }) {
 
       {/* Navigation Tabs */}
       <div className="flex items-center space-x-1.5 mt-2">
-        <TabItem icon={Globe} label="Summary" onClick={() => setActiveTab('Summary')} active={activeTab === 'Summary'} />
-        <TabItem icon={List} label="List" onClick={() => setActiveTab('List')} active={activeTab === 'List'} />
-        <TabItem icon={Kanban} label="Board" onClick={() => setActiveTab('Board')} active={activeTab === 'Board'} />
-        <TabItem icon={Code} label="Code" onClick={() => setActiveTab('Code')} active={activeTab === 'Code'} />
-        <TabItem icon={FileText} label="Forms" onClick={() => setActiveTab('Forms')} active={activeTab === 'Forms'} />
-        <TabItem icon={AlignLeft} label="Timeline" onClick={() => setActiveTab('Timeline')} active={activeTab === 'Timeline'} />
-        <TabItem icon={File} label="Pages" onClick={() => setActiveTab('Pages')} active={activeTab === 'Pages'} />
+        <TabItem icon={Globe} label="Summary" active={false} />
+        <TabItem icon={List} label="List" active={false} />
+        <TabItem icon={Kanban} label="Board" onClick={() => handleTabClick('Board', '/dashboard')} active={location.pathname === '/dashboard'} />
+        <TabItem icon={Code} label="Code" active={false} />
+        <TabItem icon={FileText} label="Forms" active={false} />
+        <TabItem icon={AlignLeft} label="Timeline" active={false} />
+        <TabItem icon={File} label="Pages" onClick={() => handleTabClick('Pages', '/pages')} active={location.pathname === '/pages'} />
         <Button variant="ghost" icon={Plus} className="ml-2" />
       </div>
     </div>
