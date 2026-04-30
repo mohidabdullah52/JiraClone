@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Dashboard from './pages/Dashboard'
 import Home from './pages/Home'
+import Pages from './pages/Pages'
 import Layout from './components/Layout'
 import ProtectedRoute from './components/ProtectedRoute'
 import { Toaster } from 'react-hot-toast'
@@ -21,6 +22,7 @@ function App() {
         <Route element={<ProtectedRoute />}>
           <Route element={<Layout />}>
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/pages" element={<Pages />} />
           </Route>
         </Route>
       </Routes>

@@ -2,107 +2,107 @@ import axios from 'axios';
 import { AUTH_ENDPOINTS } from './apiEndpoints';
 
 export const NoAuthAxios = axios.create({
-    baseURL: import.meta.env.VITE_API_BASE_URL,
-    headers: {
-        'Content-Type': 'application/json',
-    },
+  baseURL: import.meta.env.VITE_API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
 
 export const AuthAxios = axios.create({
-    baseURL: import.meta.env.VITE_API_BASE_URL,
-    headers: {
-        'Content-Type': 'application/json',
-    },
+  baseURL: import.meta.env.VITE_API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
 
 AuthAxios.interceptors.request.use(
-    (config) => {
-        const token = localStorage.getItem('accessToken');
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
-        }
-        return config;
-    },
-    (error) => Promise.reject(error)
+  (config) => {
+    const token = localStorage.getItem('accessToken');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
 );
 
 let isRefreshing = false;
 let failedQueue = [];
 
 const processQueue = (error, token = null) => {
-    failedQueue.forEach(prom => {
-        if (error) {
-            prom.reject(error);
-        } else {
-            prom.resolve(token);
-        }
-    });
-    failedQueue = [];
+  failedQueue.forEach((prom) => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token);
+    }
+  });
+  failedQueue = [];
 };
 
 AuthAxios.interceptors.response.use(
-    (response) => response,
-    async (error) => {
-        const originalRequest = error.config;
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
 
-        if (error.response && error.response.status === 401 && !originalRequest._retry) {
+    if (error.response && error.response.status === 401 && !originalRequest._retry) {
+      if (isRefreshing) {
+        return new Promise(function (resolve, reject) {
+          failedQueue.push({ resolve, reject });
+        })
+          .then((token) => {
+            originalRequest.headers.Authorization = `Bearer ${token}`;
+            return AuthAxios(originalRequest);
+          })
+          .catch((err) => {
+            return Promise.reject(err);
+          });
+      }
 
-            if (isRefreshing) {
-                return new Promise(function (resolve, reject) {
-                    failedQueue.push({ resolve, reject });
-                }).then(token => {
-                    originalRequest.headers.Authorization = `Bearer ${token}`;
-                    return AuthAxios(originalRequest);
-                }).catch(err => {
-                    return Promise.reject(err);
-                });
-            }
+      originalRequest._retry = true;
+      isRefreshing = true;
 
-            originalRequest._retry = true;
-            isRefreshing = true;
+      const refreshToken = localStorage.getItem('refreshToken');
 
-            const refreshToken = localStorage.getItem('refreshToken');
+      if (refreshToken) {
+        try {
+          const response = await NoAuthAxios.post(AUTH_ENDPOINTS.refresh, {
+            refresh: refreshToken,
+          });
 
-            if (refreshToken) {
-                try {
-                    const response = await NoAuthAxios.post(AUTH_ENDPOINTS.refresh, {
-                        refresh: refreshToken
-                    });
+          const {
+            access_token: rawAccessToken,
+            access: rawAccess,
+            refresh_token: rawRefreshToken,
+            refresh: rawRefresh,
+          } = response.data;
 
-                    const {
-                        access_token: rawAccessToken,
-                        access: rawAccess,
-                        refresh_token: rawRefreshToken,
-                        refresh: rawRefresh
-                    } = response.data;
+          const newAccessToken = rawAccessToken || rawAccess;
+          localStorage.setItem('accessToken', newAccessToken);
 
-                    const newAccessToken = rawAccessToken || rawAccess;
-                    localStorage.setItem('accessToken', newAccessToken);
+          const newRefreshToken = rawRefreshToken || rawRefresh;
+          if (newRefreshToken) {
+            localStorage.setItem('refreshToken', newRefreshToken);
+          }
 
-                    const newRefreshToken = rawRefreshToken || rawRefresh;
-                    if (newRefreshToken) {
-                        localStorage.setItem('refreshToken', newRefreshToken);
-                    }
+          processQueue(null, newAccessToken);
 
-                    processQueue(null, newAccessToken);
-
-                    originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-                    return AuthAxios(originalRequest);
-
-                } catch (refreshError) {
-                    processQueue(refreshError, null);
-                    localStorage.removeItem('accessToken');
-                    localStorage.removeItem('refreshToken');
-                    localStorage.removeItem('tokenType');
-                    return Promise.reject(refreshError);
-                } finally {
-                    isRefreshing = false;
-                }
-            } else {
-                isRefreshing = false;
-                localStorage.removeItem('accessToken');
-            }
+          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+          return AuthAxios(originalRequest);
+        } catch (refreshError) {
+          processQueue(refreshError, null);
+          localStorage.removeItem('accessToken');
+          localStorage.removeItem('refreshToken');
+          localStorage.removeItem('tokenType');
+          return Promise.reject(refreshError);
+        } finally {
+          isRefreshing = false;
         }
-        return Promise.reject(error);
+      } else {
+        isRefreshing = false;
+        localStorage.removeItem('accessToken');
+      }
     }
+    return Promise.reject(error);
+  }
 );
